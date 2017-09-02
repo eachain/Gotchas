@@ -454,7 +454,27 @@ func main() {
 
 ### **<a name="adjust-len-cap">d. 调整len和cap值</a>**
 
-**本作法为奇技淫巧, 不推荐**
+**切片下标范围是[0~cap(slice)]**
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	b := []int{1, 2, 3, 4, 5}[:0]
+	println(b)     // prints: [0/5]0xc4200160f0
+	fmt.Println(b) // prints: []
+
+	b = b[:cap(b)]
+	println(b)     // prints: [5/5]0xc4200160f0
+	fmt.Println(b) // prints: [1 2 3 4 5]
+}
+```
+
+***注意: 切片下标可以超过len到cap的范围，但读数组elem不能超过len的范围，即在`cap(b)>0`的情况下，`b[len(b)]`也是错的***
+
+**当然也可以如此:(本作法为奇技淫巧, 不推荐)**
 
 ```go
 package main
