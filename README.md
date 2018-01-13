@@ -112,6 +112,20 @@ for i, v := range slice { _ = slice[i] == v }
 for _, v := range slice { _ = v }
 ```
 
+**注意这里有一个坑：**
+
+```go
+var i int
+for i = range slice {}
+println(i)
+```
+
+输出多少？
+
+- 当`len(slice) == 0`时，输出`0`
+- 当`len(slice) > 0`时，输出`len(slice)-1`
+
+
 > map:
 
 ```go
