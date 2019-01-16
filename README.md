@@ -2273,6 +2273,58 @@ func (l *List) remove(e *Element) *Element {
 
 **************************************************
 
+**<a name="pkg-sync">pkg sync</a>**
+=============================
+
+### **<a name="sync-wait-group">a. WaitGroup.Add要写在进入协程前</a>**
+
+> 错误写法：
+
+```go
+package main
+
+import (
+	"sync"
+)
+
+func main() {
+	var wg sync.WaitGroup
+	for i := 0; i < 10; i++ {
+		go func(i int) {
+			wg.Add(1)
+			defer wg.Done()
+			println(i)
+		}(i)
+	}
+	wg.Wait()
+}
+```
+
+> 正确写法：
+
+```go
+package main
+
+import (
+	"sync"
+)
+
+func main() {
+	var wg sync.WaitGroup
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			println(i)
+		}(i)
+	}
+	wg.Wait()
+}
+
+```
+
+**************************************************
+
 **<a name="pkg-unsafe">pkg unsafe (不推荐使用该包)</a>**
 =============================
 
